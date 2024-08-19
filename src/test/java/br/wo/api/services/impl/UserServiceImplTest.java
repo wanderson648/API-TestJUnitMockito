@@ -29,6 +29,8 @@ class UserServiceImplTest {
     public static final String NAME = "Wanderson";
     public static final String EMAIL = "wanderson@gmail.com";
     public static final String PASSWORD = "12345";
+    public static final String OBJETO_NAO_ENCONTRADO = "Objeto não encontrado";
+    public static final String E_MAIL_JA_CADASTRADO_NO_SISTEMA = "E-mail já cadastrado no sistema.";
 
 
     @InjectMocks
@@ -73,13 +75,13 @@ class UserServiceImplTest {
     @DisplayName("whenFindByIdThenReturnAnObjectNotFoundException")
     void whenFindByIdThenReturnAnObjectNotFoundException() {
         when(repository.findById(anyInt()))
-                .thenThrow(new ObjectNotFoundException("Objeto não encontrado"));
+                .thenThrow(new ObjectNotFoundException(OBJETO_NAO_ENCONTRADO));
 
         try {
             service.findById(ID);
         } catch(Exception ex) {
             assertEquals(ObjectNotFoundException.class, ex.getClass());
-            assertEquals("Objeto não encontrado", ex.getMessage());
+            assertEquals(OBJETO_NAO_ENCONTRADO, ex.getMessage());
         }
     }
 
@@ -117,7 +119,7 @@ class UserServiceImplTest {
             service.create(userDto);
         } catch (Exception ex) {
             assertEquals(DataIntegrityViolationException.class, ex.getClass());
-            assertEquals("E-mail já cadastrado no sistema.", ex.getMessage());
+            assertEquals(E_MAIL_JA_CADASTRADO_NO_SISTEMA, ex.getMessage());
         }
     }
 
@@ -143,7 +145,7 @@ class UserServiceImplTest {
             service.create(userDto);
         } catch (Exception ex) {
             assertEquals(DataIntegrityViolationException.class, ex.getClass());
-            assertEquals("E-mail já cadastrado no sistema.", ex.getMessage());
+            assertEquals(E_MAIL_JA_CADASTRADO_NO_SISTEMA, ex.getMessage());
         }
     }
 
@@ -152,6 +154,20 @@ class UserServiceImplTest {
     void deleteWithSuccess() {
         service.delete(ID);
         verify(repository, times(1)).delete(any());
+    }
+
+    @Test
+    @DisplayName("deleteWithObjectNotFoundException")
+    void deleteWithObjectNotFoundException() {
+        when(repository.findById(anyInt()))
+                .thenThrow(new ObjectNotFoundException(OBJETO_NAO_ENCONTRADO));
+
+        try {
+            service.delete(ID);
+        } catch (Exception ex) {
+            assertEquals(ObjectNotFoundException.class, ex.getClass());
+            assertEquals(OBJETO_NAO_ENCONTRADO, ex.getMessage());
+        }
     }
 
 }
