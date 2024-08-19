@@ -20,7 +20,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 class UserServiceImplTest {
@@ -46,17 +46,15 @@ class UserServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(repository.findById(anyInt()))
-                .thenReturn(Optional.of(user));
+        when(repository.findById(anyInt())).thenReturn(Optional.of(user));
 
-        when(repository.findAll())
-                .thenReturn(List.of(user));
+        when(repository.findAll()).thenReturn(List.of(user));
 
-        when(repository.save(any()))
-                .thenReturn(user);
+        when(repository.save(any())).thenReturn(user);
 
-        when(repository.findByEmail(anyString()))
-                .thenReturn(optionalUser);
+        when(repository.findByEmail(anyString())).thenReturn(optionalUser);
+
+       doNothing().when(repository).delete(any());
 
     }
 
@@ -150,7 +148,10 @@ class UserServiceImplTest {
     }
 
     @Test
-    void delete() {
+    @DisplayName("deleteWithSuccess")
+    void deleteWithSuccess() {
+        service.delete(ID);
+        verify(repository, times(1)).delete(any());
     }
 
 }
