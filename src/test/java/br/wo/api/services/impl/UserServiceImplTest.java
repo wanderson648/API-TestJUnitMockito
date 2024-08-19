@@ -39,8 +39,6 @@ class UserServiceImplTest {
     @Mock
     private UserRepository repository;
 
-    @Mock
-    private ModelMapper mapper;
 
     private User user = new User(ID, NAME, EMAIL, PASSWORD);
     private UserDto userDto = new UserDto(ID, NAME, EMAIL, PASSWORD);
