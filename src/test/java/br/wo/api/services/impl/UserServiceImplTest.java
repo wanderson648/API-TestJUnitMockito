@@ -14,9 +14,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -46,6 +48,9 @@ class UserServiceImplTest {
     void setUp() {
         when(repository.findById(anyInt()))
                 .thenReturn(Optional.of(new User(ID, NAME, EMAIL, PASSWORD)));
+
+        when(repository.findAll())
+                .thenReturn(List.of(new User(ID, NAME, EMAIL, PASSWORD)));
     }
 
     @Test
@@ -75,7 +80,14 @@ class UserServiceImplTest {
 
 
     @Test
-    void findAll() {
+    @DisplayName("whenFindAllTheReturnAnListOfUsers")
+    void whenFindAllTheReturnAnListOfUsers() {
+       List<User> users = service.findAll();
+
+       assertNotNull(users);
+       assertEquals(1, users.size());
+       assertEquals(User.class, users.get(0).getClass());
+       assertEquals(ID, users.get(0).getId());
     }
 
     @Test
