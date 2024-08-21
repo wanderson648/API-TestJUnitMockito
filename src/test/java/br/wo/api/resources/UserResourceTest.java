@@ -104,11 +104,23 @@ class UserResourceTest {
         assertEquals(NAME, user.getBody().getName());
         assertEquals(EMAIL, user.getBody().getEmail());
         assertEquals(PASSWORD, user.getBody().getPassword());
-
     }
 
     @Test
-    void update() {
+    @DisplayName("whenUpdateThenReturnSuccess")
+    void whenUpdateThenReturnSuccess() {
+        ResponseEntity<UserDto> user = resource.update(ID, userDto);
+
+        assertNotNull(user);
+        assertNotNull(user);
+        assertNotNull(user.getBody());
+        assertEquals(HttpStatus.OK, user.getStatusCode());
+        assertEquals(ResponseEntity.class, user.getClass());
+        assertEquals(UserDto.class, user.getBody().getClass());
+
+        assertEquals(ID, user.getBody().getId());
+        assertEquals(NAME, user.getBody().getName());
+        assertEquals(EMAIL, user.getBody().getEmail());
     }
 
     @Test
