@@ -1,5 +1,6 @@
 package br.wo.api.domain;
 
+import br.wo.api.domain.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,4 +26,11 @@ public class User implements Serializable {
     private String email;
 
     private String password;
+
+    public User(UserDto obj) {
+        this.id = obj.getId();
+        this.name = obj.getName();
+        this.email = obj.getEmail();
+        this.password = obj.getPassword();
+    }
 }

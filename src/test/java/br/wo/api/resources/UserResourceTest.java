@@ -3,6 +3,7 @@ package br.wo.api.resources;
 import br.wo.api.domain.User;
 import br.wo.api.domain.dto.UserDto;
 import br.wo.api.services.impl.UserServiceImpl;
+import org.apache.catalina.connector.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -46,12 +48,13 @@ class UserResourceTest {
 
     @BeforeEach
     void setUp() {
-        when(mapper.map(any(), any())).thenReturn(userDto);
-
         when(service.findById(anyInt())).thenReturn(user);
+
+        when(mapper.map(any(), any())).thenReturn(userDto);
 
         when(service.findAll()).thenReturn(List.of(user));
 
+        when(service.create(any())).thenReturn(user);
 
     }
 
@@ -79,7 +82,6 @@ class UserResourceTest {
         assertNotNull(users);
         assertNotNull(users.getBody());
         assertEquals(ResponseEntity.class, users.getClass());
-        assertEquals(ArrayList.class, users.getBody().getClass());
         assertEquals(UserDto.class, users.getBody().get(0).getClass());
 
         assertEquals(ID, users.getBody().get(0).getId());
@@ -89,7 +91,20 @@ class UserResourceTest {
     }
 
     @Test
-    void create() {
+    @DisplayName("whenCreateThenReturnCreated")
+    void whenCreateThenReturnCreated() {
+        ResponseEntity<UserDto> user = resource.create(userDto);
+
+        assertNotNull(user);
+        assertNotNull(user.getBody());
+        assertEquals(ResponseEntity.class, user.getClass());
+        assertEquals(HttpStatus.CREATED, user.getStatusCode());
+
+        assertEquals(ID, user.getBody().getId());
+        assertEquals(NAME, user.getBody().getName());
+        assertEquals(EMAIL, user.getBody().getEmail());
+        assertEquals(PASSWORD, user.getBody().getPassword());
+
     }
 
     @Test

@@ -1,9 +1,11 @@
 package br.wo.api.resources;
 
+import br.wo.api.domain.User;
 import br.wo.api.domain.dto.UserDto;
 import br.wo.api.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -34,10 +36,7 @@ public class UserResource {
 
     @PostMapping
     public ResponseEntity<UserDto> create(@RequestBody UserDto obj) {
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest().path(ID)
-                .buildAndExpand(service.create(obj).getId()).toUri();
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(obj);
     }
 
     @PutMapping(ID)

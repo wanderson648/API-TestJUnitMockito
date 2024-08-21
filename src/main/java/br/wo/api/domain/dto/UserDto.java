@@ -17,4 +17,5 @@ public class UserDto {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+
 }
