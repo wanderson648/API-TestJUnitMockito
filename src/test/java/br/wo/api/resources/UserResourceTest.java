@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 @ExtendWith(SpringExtension.class)
@@ -55,6 +55,8 @@ class UserResourceTest {
         when(service.findAll()).thenReturn(List.of(user));
 
         when(service.create(any())).thenReturn(user);
+
+        doNothing().when(service).delete(anyInt());
 
     }
 
@@ -124,6 +126,13 @@ class UserResourceTest {
     }
 
     @Test
-    void delete() {
+    @DisplayName("whenDeletedThenReturnSuccess")
+    void whenDeletedThenReturnSuccess() {
+
+        ResponseEntity<Void> user = resource.delete(ID);
+
+        assertEquals(ResponseEntity.class, user.getClass());
+        assertEquals(HttpStatus.NO_CONTENT, user.getStatusCode());
+        verify(service, times(1)).delete(anyInt());
     }
 }
